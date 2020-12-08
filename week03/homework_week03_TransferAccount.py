@@ -65,13 +65,14 @@ def transAccount(conn, cur, fromuser, touser, transCount):
                 sql_UPDATEfromuser = "UPDATE user_assets SET u_assets = u_assets - {} WHERE u_id = '{}'".format(transCount,fromuser_id)
                 sql_UPDATEtouser = "UPDATE user_assets SET u_assets = u_assets + {} WHERE u_id = '{}'".format(transCount,touser_id[0])
                 cur.execute(sql_UPDATEfromuser)
-                conn.commit()
+                # conn.commit()
                 cur.execute(sql_UPDATEtouser)
-                conn.commit()
-
-                wriAudit(conn=conn,cur=cur,fromAccount=fromuser,toAccount=touser,transCount=transCount)
+                # conn.commit()
             except:
                 conn.rollback()
+            else:
+                conn.commit()
+                wriAudit(conn=conn, cur=cur, fromAccount=fromuser, toAccount=touser, transCount=transCount)
         else:
             print("FAILED:Not enough money")
 
@@ -85,5 +86,5 @@ if __name__ == '__main__':
         print(err)
     else:
         # 连接未报错，开始执行转账动作
-        transAccount(conn=conn, cur=cursor, fromuser='zhang3', touser='li4',transCount=211.6)
+        transAccount(conn=conn, cur=cursor, fromuser='zhang3', touser='li4',transCount=300)
 
